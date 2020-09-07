@@ -1,0 +1,58 @@
+% Run this file with pdftex, it produces a file named
+% booklet.pdf in the current directory. Alfred Klomp, 2006.
+% Support for non-multiples of four pages by Jakob Lund, 2011.
+% Version 1.1
+
+\def\bookletfile{oos.pdf}
+
+\newcount\numpages
+\newcount\fcount         % forwards count, starts at page 1 and counts up
+\newcount\bcount         % backwards count, starts at last page and counts down
+\newcount\leftright      % is the page with the lowest number on the left?
+\newcount\pagea          % pageno. to be placed on the left
+\newcount\pageb          % pageno. to be placed on the right
+
+\pdfpagewidth  210mm      % portrait A4 format
+\pdfpageheight 297mm     
+
+\pdfximage {\bookletfile}
+\numpages=\pdflastximagepages
+
+\fcount=1
+\bcount=\numpages
+\advance\bcount by 3     % round up to multiple of 4
+\divide\bcount by 4
+\multiply\bcount by 4
+\leftright=0
+\pdfhorigin=0bp
+\pdfvorigin=0bp
+\advance\numpages by 1
+
+\loop
+  \ifnum\leftright=0
+    \pagea=\bcount
+    \pageb=\fcount
+    \leftright=1
+  \else
+    \pagea=\fcount
+    \pageb=\bcount
+    \leftright=0
+  \fi
+  \shipout\hbox to \pdfpagewidth {%
+    \ifnum\pagea<\numpages%
+      \pdfximage height \pdfpageheight page \pagea {\bookletfile}%
+      \pdfrefximage\pdflastximage%
+    \fi%
+    \hfil%
+    \ifnum\pageb<\numpages%
+      \pdfximage height \pdfpageheight page \pageb {\bookletfile}%
+      \pdfrefximage\pdflastximage%
+    \fi%
+  }%
+  \advance\fcount by 1
+  \advance\bcount by -1
+  \ifnum\fcount<\bcount\repeat
+
+\end
+
+

@@ -1,7 +1,7 @@
 
 all: booklet.pdf Makefile
 
-oos.pdf: oos.tex
+oos.pdf: oos.tex bouquet_edit3_transparent.png
 	xelatex oos.tex
 	xelatex oos.tex
 
